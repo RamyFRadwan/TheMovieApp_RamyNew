@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.rockerhieu:rv-adapter-endless-1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rv-adapter-endless-1.2.aar/bda95af28b46d7e1e244cd3e9d2018f3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rv-adapter-endless-1.2.aar/bda95af28b46d7e1e244cd3e9d2018f3/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.rockerhieu/rv-adapter-endless/1.2/341e1773a66f9652878d6ae61a1053e1e62e7dde/rv-adapter-endless-1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
