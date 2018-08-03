@@ -1,9 +1,7 @@
 package com.ramyfradwan.ramy.themovieapp_tmdb.controllers;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseCoreController;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MoviesResponse;
@@ -21,13 +19,11 @@ import static com.ramyfradwan.ramy.themovieapp_tmdb.utils.ConstantsPrivate.API_K
 
 
 public class MoviesController extends BaseCoreController {
-    private final Context context;
     private MoviesControllerListener moviesControllerListener;
-    public MoviesController(MoviesControllerListener moviesControllerListener, Context context){
+    public MoviesController(MoviesControllerListener moviesControllerListener){
         super(moviesControllerListener);
         this.moviesControllerListener = moviesControllerListener;
         this.listener = (MoviesControllerListener) moviesControllerListener;
-        this.context = context;
     }
 
     public void getPopularMovies(@NonNull final String className, int pageIndex){

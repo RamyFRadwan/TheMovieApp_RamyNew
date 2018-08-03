@@ -26,7 +26,7 @@
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/tool_bar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 app:layout_collapseMode="pin"
@@ -42,10 +42,10 @@
         android:clipToPadding="false"
         android:focusableInTouchMode="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <include layout="@layout/activity_connection_status"/>
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="30dp"
                                 android:textAppearance="?android:textAppearanceLarge"
-                                android:textColor="@color/colorAccent" />
+                                android:textColor="@color/detail_text" />
 
                             <TextView
                                 android:id="@+id/detail_rating"
@@ -103,9 +103,7 @@
                             android:id="@+id/favouriteButton"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginLeft="25dp"
-
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="50dp"
                             android:layout_weight="1"
                             android:background="@drawable/fav_click_selector"
                             android:textOff=""
@@ -126,7 +124,7 @@
                         android:layout_height="wrap_content"
                         android:padding="15dp"
                         android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="@color/colorAccent" />
+                        android:textColor="@color/detail_text" />
 
                 </LinearLayout>
 

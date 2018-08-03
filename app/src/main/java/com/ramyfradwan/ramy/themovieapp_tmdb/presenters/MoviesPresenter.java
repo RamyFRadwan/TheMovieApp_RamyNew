@@ -1,52 +1,67 @@
 package com.ramyfradwan.ramy.themovieapp_tmdb.presenters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.ramyfradwan.ramy.themovieapp_tmdb.R;
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BasePresenter;
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseResponseModel;
 import com.ramyfradwan.ramy.themovieapp_tmdb.controllers.MoviesController;
 import com.ramyfradwan.ramy.themovieapp_tmdb.controllers.MoviesControllerListener;
-import com.ramyfradwan.ramy.themovieapp_tmdb.model.Movie;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MoviesResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
+import com.ramyfradwan.ramy.themovieapp_tmdb.utils.network.ConnectionStatus;
 
-import java.util.List;
-
-public class MoviesPresenter extends BasePresenter<MoviesController, MoviesPresenterListener> implements MoviesControllerListener {
+public class MoviesPresenter extends BasePresenter<MoviesController, MoviesPresenterListener>
+        implements MoviesControllerListener {
     private MoviesPresenterListener moviesPresenterListener;
-    private Context context;
+    private ConnectionStatus connectionStatus;
 
-    public MoviesPresenter(Context context, MoviesPresenterListener moviesPresenterListener) {
-        this.context = context;
-        controller = new MoviesController(this, context);
+    public MoviesPresenter(MoviesPresenterListener moviesPresenterListener) {
+        controller = new MoviesController(this);
         this.listener = moviesPresenterListener;
+        connectionStatus = new ConnectionStatus();
     }
 
     public void getPopularMovies(@NonNull final String className, int pageIndex) {
-        controller.getPopularMovies(className, pageIndex);
+        try {
+            if (Constants.CONNECTED == connectionStatus.getStatus()) {
+                controller.getPopularMovies(className, pageIndex);
+                connectionStatus.tvConnectionStatus.setText(R.string.connected);
+            } else
+                connectionStatus.tvConnectionStatus.setText(R.string.no_internet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getTopRatedMovies(@NonNull final String className, int pageIndex) {
-        controller.getTopRatedMovies(className, pageIndex);
+        try {
+            if (Constants.CONNECTED == connectionStatus.getStatus()) {
+                controller.getTopRatedMovies(className, pageIndex);
+                connectionStatus.tvConnectionStatus.setText(R.string.connected);
+            } else
+                connectionStatus.tvConnectionStatus.setText(R.string.no_internet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onFinishController(BaseResponseModel response, String tag) {
         super.onFinishController(response, tag);
-        if (null != response){
+        if (null != response) {
             if (response instanceof MoviesResponse)
-                listener.getMovies(((MoviesResponse) response).getResults(),((MoviesResponse) response).getTotalPages());
+                listener.getMovies(((MoviesResponse) response).getResults(), ((MoviesResponse) response).getTotalPages());
         }
     }
 
-    public void loadMorePages(@NonNull final  String className,
-                                     int pageIndex,
-                              @NonNull final String sortType){
+    public void loadMorePages(@NonNull final String className,
+                              int pageIndex,
+                              @NonNull final String sortType) {
         if (Constants.GET_POP_MOVIES.equalsIgnoreCase(sortType))
-            controller.getPopularMovies(className,pageIndex);
+            controller.getPopularMovies(className, pageIndex);
         else if (Constants.GET_TOP_MOVIES.equalsIgnoreCase(sortType))
-            controller.getTopRatedMovies(className,pageIndex);
+            controller.getTopRatedMovies(className, pageIndex);
 
     }
 }

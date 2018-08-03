@@ -18,7 +18,7 @@
         android:id="@+id/tv_connection_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Internet Connection"
+        android:text="@string/no_internet_connection"
         android:textColor="@color/white"
         android:paddingLeft="10dp"
         android:gravity="center"

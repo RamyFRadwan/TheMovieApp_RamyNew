@@ -14,4 +14,8 @@
     <string name="id">ID</string>
     <string name="trailers_title">Trailers</string>
     <string name="reviews_title">Reviews</string>
+    <string name="separator">|</string>
+    <string name="picasso_exception">Picasso Exception</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="error_retrieving_mmovies">Error Retrieving Movies</string>
 </resources>

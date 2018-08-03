@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.ramyfradwan.ramy.themovieapp_tmdb.R;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
 
+import java.util.Objects;
+
 import static com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants.NO_INTERNET_CONNECTION;
 import static com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants.WAITING_FOR_NETWORK;
 
@@ -40,31 +42,29 @@ public class ConnectionStatus {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = Objects.requireNonNull(cm).getActiveNetworkInfo();
 
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-        boolean wifiConnected = wifiManager.isWifiEnabled();
-        boolean mobileConnected = (tm.getDataState() == TelephonyManager.DATA_CONNECTED);
+        boolean wifiConnected = Objects.requireNonNull(wifiManager).isWifiEnabled();
+        boolean mobileConnected = (Objects.requireNonNull(tm).getDataState() == TelephonyManager.DATA_CONNECTED);
 
         Log.e(TAG, "wifiManager: " + wifiConnected);
         Log.e(TAG, "mobileConnected: " + mobileConnected);
 
-        if(wifiConnected) { // Wifi os ON.
+        if (wifiConnected) { // Wifi os ON.
             return checkTraffic(activeNetwork);
-        }
-        else if(mobileConnected) { // Mobile data os ON.
+        } else if (mobileConnected) { // Mobile data os ON.
             return checkTraffic(activeNetwork);
-        }
-        else
+        } else
             return NO_INTERNET_CONNECTION; // Wifi is OFF, Mobile Data is ON.
 
     }
 
     private static int checkTraffic(NetworkInfo activeNetwork) {
         Log.e(TAG, "checkTraffic");
-        if(activeNetwork == null)
+        if (activeNetwork == null)
             return WAITING_FOR_NETWORK;
         else
             return Constants.CONNECTED;
@@ -79,7 +79,7 @@ public class ConnectionStatus {
         return mMessageReceiver;
     }
 
-    public void unRegisterReceiver(Activity activity, BroadcastReceiver mMessageReceiver){
+    public void unRegisterReceiver(Activity activity, BroadcastReceiver mMessageReceiver) {
         LocalBroadcastManager.getInstance(activity).unregisterReceiver(mMessageReceiver);
     }
 
@@ -87,14 +87,14 @@ public class ConnectionStatus {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e(TAG, "onReceive");
-            if(tvConnectionStatus != null) {
+            if (tvConnectionStatus != null) {
                 int status = ConnectionStatus.getConnectivityStatus(context);
                 changeTextStatus(context, status);
             }
         }
     };
 
-    public void initConnectionStatus(Activity activity){
+    public void initConnectionStatus(Activity activity) {
         tvConnectionStatus = (TextView) activity.findViewById(R.id.tv_connection_status);
         llStatusBack = (LinearLayout) activity.findViewById(R.id.ll_connection_status);
         pbLoading = (ProgressBar) activity.findViewById(R.id.pb_loading);
@@ -108,8 +108,8 @@ public class ConnectionStatus {
     private ProgressBar pbLoading;
     private LinearLayout llStatusBack;
 
-    public void changeTextStatus(Context context, int status){
-        if(tvConnectionStatus == null ||
+    public void changeTextStatus(Context context, int status) {
+        if (tvConnectionStatus == null ||
                 llStatusBack == null ||
                 pbLoading == null)
             return;
@@ -137,7 +137,7 @@ public class ConnectionStatus {
                 tvConnectionStatus.setText(context.getResources().getString(R.string.connected));
                 llStatusBack.setBackgroundResource(R.color.green);
                 pbLoading.setVisibility(View.GONE);
-                mHandler.postDelayed(connectedRunnable,2000);
+                mHandler.postDelayed(connectedRunnable, 2000);
                 break;
 
             case Constants.RECONNECTED:
