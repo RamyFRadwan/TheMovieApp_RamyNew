@@ -3,40 +3,18 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseResponseModel;
 
 public class MovieDetailsResponse extends BaseResponseModel implements Parcelable
 {
 
-    @SerializedName("id")
-    @Expose
     private Integer id;
-    @SerializedName("original_title")
-    @Expose
     private String name;
-    @SerializedName("poster_path")
-    @Expose
     private String posterPath;
-    @SerializedName("backdrop_path")
-    @Expose
     private String backdropPath;
-
-    @SerializedName("overview")
-    @Expose
     private String overview;
-
-    @SerializedName("vote_average")
-    @Expose
     private float vote_average;
-
-    @SerializedName("vote_count")
-    @Expose
     private long vote_count;
-
-    @SerializedName("release_date")
-    @Expose
     private String release_date;
 
     public MovieDetailsResponse(Integer id, String name, String posterPath, String backdropPath, String overview, float vote_average, long vote_count, String release_date) {
