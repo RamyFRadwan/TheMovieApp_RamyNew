@@ -10,4 +10,8 @@ public class Constants {
     public static final int CONNECTED = 2;
     public static final int RECONNECTED = 3;
     public static final String ID = "ID";
+
+
+    //TODO:: Remove before publish
+    public static final String API_KEY = "8eba4d6ed400df7cf254bca20f271ff0";
 }

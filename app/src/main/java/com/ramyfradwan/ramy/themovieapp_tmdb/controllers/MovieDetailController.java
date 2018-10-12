@@ -3,7 +3,6 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.controllers;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ramyfradwan.ramy.themovieapp_tmdb.BuildConfig;
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseCoreController;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
@@ -31,7 +30,7 @@ public class MovieDetailController extends BaseCoreController<MovieDetailControl
         ConfigApi apiService =
                 ApiClient.getClient().create(ConfigApi.class);
 
-        Call<MovieDetailsResponse> call = apiService.getMovieDetails(movieId, BuildConfig.API_KEY);
+        Call<MovieDetailsResponse> call = apiService.getMovieDetails(movieId, Constants.API_KEY);
         Log.e("Request Movie", Objects.requireNonNull(call.request()).toString());
 
         call.enqueue(new Callback<MovieDetailsResponse>() {

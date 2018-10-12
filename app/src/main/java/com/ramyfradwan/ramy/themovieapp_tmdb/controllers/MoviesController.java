@@ -3,7 +3,6 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.controllers;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ramyfradwan.ramy.themovieapp_tmdb.BuildConfig;
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseCoreController;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MoviesResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
@@ -30,7 +29,7 @@ public class MoviesController extends BaseCoreController {
         ConfigApi apiService =
                 ApiClient.getClient().create(ConfigApi.class);
 
-        Call<MoviesResponse> call = apiService.getMostPopularMovies(BuildConfig.API_KEY, pageIndex);
+        Call<MoviesResponse> call = apiService.getMostPopularMovies(Constants.API_KEY, pageIndex);
         Log.e("Request Movie", Objects.requireNonNull(call.request()).toString());
 
         call.enqueue(new Callback<MoviesResponse>() {
@@ -55,7 +54,7 @@ public class MoviesController extends BaseCoreController {
         ConfigApi apiService =
                 ApiClient.getClient().create(ConfigApi.class);
 
-        Call<MoviesResponse> call = apiService.getTopRatedMovies(BuildConfig.API_KEY, pageIndex);
+        Call<MoviesResponse> call = apiService.getTopRatedMovies(Constants.API_KEY, pageIndex);
         Log.e("Request Movie", call.toString());
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
