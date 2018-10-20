@@ -5,13 +5,13 @@ import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.Review;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.Trailer;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface MovieDetailPresenterLisener extends BasePresenterListener {
     void getMovieDetails(MovieDetailsResponse response);
 
-    void onTrailersRetrieved(List<Trailer> trailers);
+    void onTrailersRetrieved(ArrayList<Trailer> trailers);
 
-    void onReviewsRetrieved(List<Review> reviews);
+    void onReviewsRetrieved(ArrayList<Review> reviews);
 
 }

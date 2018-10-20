@@ -6,15 +6,14 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.network.ConnectionStatus;
 
 import butterknife.ButterKnife;
 import icepick.Icepick;
 
-public abstract class BaseActivity <T extends BasePresenter>
-                                        extends AppCompatActivity
-                                        implements BasePresenterListener {
+public abstract class BaseActivity<T extends BasePresenter>
+        extends AppCompatActivity
+        implements BasePresenterListener {
     protected T presenter;
     protected ConnectionStatus connectionStatus = new ConnectionStatus();
     private BroadcastReceiver mMessageReceiver;
@@ -23,7 +22,6 @@ public abstract class BaseActivity <T extends BasePresenter>
     @Override
     protected void onResume() {
         super.onResume();
-
         mMessageReceiver = connectionStatus.registerReceiver(this);
     }
 

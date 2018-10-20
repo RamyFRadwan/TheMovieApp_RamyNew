@@ -29,14 +29,32 @@ public class ConnectionStatus {
 
     private static final String TAG = ConnectionStatus.class.getSimpleName();
     private final Handler mHandler = new Handler();
-    private int status = Constants.CONNECTED;
+    public TextView tvConnectionStatus;
     /*public static int TYPE_WIFI = 1;
     public static int TYPE_MOBILE = 2;
     public static int TYPE_NOT_CONNECTED = 0;*/
-
-    public int getStatus() {
-        return status;
-    }
+    private int status = Constants.CONNECTED;
+    private ProgressBar pbLoading;
+    private LinearLayout llStatusBack;
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e(TAG, "onReceive");
+            if (tvConnectionStatus != null) {
+                int status = ConnectionStatus.getConnectivityStatus(context);
+                changeTextStatus(context, status);
+            }
+        }
+    };
+    final Runnable connectedRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                llStatusBack.setVisibility(View.GONE);
+            } catch (Exception ignored) {
+            }
+        }
+    };
 
     public static int getConnectivityStatus(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -70,6 +88,10 @@ public class ConnectionStatus {
             return Constants.CONNECTED;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
     public BroadcastReceiver registerReceiver(Activity activity) {
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -81,18 +103,8 @@ public class ConnectionStatus {
 
     public void unRegisterReceiver(Activity activity, BroadcastReceiver mMessageReceiver) {
         LocalBroadcastManager.getInstance(activity).unregisterReceiver(mMessageReceiver);
+        activity.unregisterReceiver(mMessageReceiver);
     }
-
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "onReceive");
-            if (tvConnectionStatus != null) {
-                int status = ConnectionStatus.getConnectivityStatus(context);
-                changeTextStatus(context, status);
-            }
-        }
-    };
 
     public void initConnectionStatus(Activity activity) {
         tvConnectionStatus = (TextView) activity.findViewById(R.id.tv_connection_status);
@@ -102,11 +114,6 @@ public class ConnectionStatus {
         int status = ConnectionStatus.getConnectivityStatus(activity);
         changeTextStatus(activity, status);
     }
-
-    public TextView tvConnectionStatus;
-
-    private ProgressBar pbLoading;
-    private LinearLayout llStatusBack;
 
     public void changeTextStatus(Context context, int status) {
         if (tvConnectionStatus == null ||
@@ -150,16 +157,6 @@ public class ConnectionStatus {
         }
         this.status = status;
     }
-
-    final Runnable connectedRunnable = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                llStatusBack.setVisibility(View.GONE);
-            } catch (Exception ignored) {
-            }
-        }
-    };
 
     /*public static String getConnectivityStatusString(Context context) {
         int conn = ConnectionStatus.getConnectivityStatus(context);

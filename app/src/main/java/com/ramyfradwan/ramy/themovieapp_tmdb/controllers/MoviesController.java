@@ -18,13 +18,14 @@ import retrofit2.Response;
 
 public class MoviesController extends BaseCoreController {
     private MoviesControllerListener moviesControllerListener;
-    public MoviesController(MoviesControllerListener moviesControllerListener){
+
+    public MoviesController(MoviesControllerListener moviesControllerListener) {
         super(moviesControllerListener);
         this.moviesControllerListener = moviesControllerListener;
         this.listener = (MoviesControllerListener) moviesControllerListener;
     }
 
-    public void getPopularMovies(@NonNull final String className, int pageIndex){
+    public void getPopularMovies(@NonNull final String className, int pageIndex) {
 
         ConfigApi apiService =
                 ApiClient.getClient().create(ConfigApi.class);
@@ -34,22 +35,22 @@ public class MoviesController extends BaseCoreController {
 
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
-            public void onResponse(@NonNull Call<MoviesResponse>call, @NonNull Response<MoviesResponse> response) {
+            public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
                 if (null != response.body())
                     Log.e("movies count  :  ", response.body().getTotalPages() + "");
 
-                    moviesControllerListener.onFinishController(response.body(), Constants.GET_POP_MOVIES);
+                moviesControllerListener.onFinishController(response.body(), Constants.GET_POP_MOVIES);
             }
 
             @Override
-            public void onFailure(@NonNull Call<MoviesResponse>call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
                 // Log error here since request failed
                 Log.e(className, t.toString());
             }
         });
     }
 
-    public void getTopRatedMovies(@NonNull final String className, int pageIndex){
+    public void getTopRatedMovies(@NonNull final String className, int pageIndex) {
 
         ConfigApi apiService =
                 ApiClient.getClient().create(ConfigApi.class);
@@ -58,12 +59,12 @@ public class MoviesController extends BaseCoreController {
         Log.e("Request Movie", call.toString());
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
-            public void onResponse(Call<MoviesResponse>call, Response<MoviesResponse> response) {
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 moviesControllerListener.onFinishController(response.body(), Constants.GET_TOP_MOVIES);
             }
 
             @Override
-            public void onFailure(Call<MoviesResponse>call, Throwable t) {
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(className, t.toString());
             }

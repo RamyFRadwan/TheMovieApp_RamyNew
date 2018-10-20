@@ -30,6 +30,7 @@ public class MoviesMainActivity extends BaseActivity<MoviesPresenter>
     private EndlessRecyclerViewAdapter endlessRecyclerViewAdapter;
     private int pageCount = 0;
     private ConnectionStatus connectionStatus = new ConnectionStatus();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -2,7 +2,7 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.base;
 
 public class BasePresenter<T extends BaseCoreController,
         E extends BasePresenterListener>
-        implements BaseCoreControllerListener{
+        implements BaseCoreControllerListener {
     protected E listener;
     protected T controller;
 

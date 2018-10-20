@@ -13,7 +13,6 @@ public abstract class BaseCoreController<T> {
     }
 
 
-
     public void destroy() {
         listener = null;
     }

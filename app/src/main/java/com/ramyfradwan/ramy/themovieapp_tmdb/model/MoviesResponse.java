@@ -9,6 +9,17 @@ import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseResponseModel;
 import java.util.List;
 
 public class MoviesResponse extends BaseResponseModel implements Parcelable {
+    public static final Creator<MoviesResponse> CREATOR = new Creator<MoviesResponse>() {
+        @Override
+        public MoviesResponse createFromParcel(Parcel in) {
+            return new MoviesResponse(in);
+        }
+
+        @Override
+        public MoviesResponse[] newArray(int size) {
+            return new MoviesResponse[size];
+        }
+    };
     @SerializedName("page")
     private int page;
     @SerializedName("results")
@@ -23,18 +34,6 @@ public class MoviesResponse extends BaseResponseModel implements Parcelable {
         totalResults = in.readInt();
         totalPages = in.readInt();
     }
-
-    public static final Creator<MoviesResponse> CREATOR = new Creator<MoviesResponse>() {
-        @Override
-        public MoviesResponse createFromParcel(Parcel in) {
-            return new MoviesResponse(in);
-        }
-
-        @Override
-        public MoviesResponse[] newArray(int size) {
-            return new MoviesResponse[size];
-        }
-    };
 
     public int getPage() {
         return page;

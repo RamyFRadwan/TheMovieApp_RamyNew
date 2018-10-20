@@ -38,28 +38,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         this.context = context;
     }
 
-
-    class MoviesViewHolder extends RecyclerView.ViewHolder {
-        private ImageView poster;
-        private TextView movieName;
-        private LinearLayout full_layout;
-        protected LinearLayout movieHolder;
-        protected LinearLayout movieTitleHolder;
-        protected ToggleButton favouriteButton;
-        private View v;
-        public MoviesViewHolder(View itemView) {
-            super(itemView);
-            v = itemView;
-            poster = itemView.findViewById(R.id.moviePosterImg);
-            movieName = itemView.findViewById(R.id.movieName);
-            full_layout = (LinearLayout) v.findViewById(R.id.movie_layout);
-            movieHolder = (LinearLayout) v.findViewById(R.id.movieHolder);
-            movieTitleHolder = (LinearLayout) v.findViewById(R.id.movieTitleHolder);
-            favouriteButton = (ToggleButton) v.findViewById(R.id.favouriteButton);
-
-        }
-    }
-
     @NonNull
     @Override
     public MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -94,8 +72,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                                             PicassoPalette.Swatch.TITLE_TEXT_COLOR));
 
 
-        }catch (Exception e){
-            Log.e(context.getString(R.string.picasso_exception) , e.getMessage());
+        } catch (Exception e) {
+            Log.e(context.getString(R.string.picasso_exception), e.getMessage());
         }
 
         holder.v.setOnClickListener(new View.OnClickListener() {
@@ -116,16 +94,36 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         return movies.size();
     }
 
-
     public void appendItems(List<Movie> items) {
         movies.addAll(items);
         notifyItemRangeInserted(getItemCount(), items.size());
     }
 
-
     public void clear() {
         movies.clear();
         notifyDataSetChanged();
+    }
+
+    class MoviesViewHolder extends RecyclerView.ViewHolder {
+        protected LinearLayout movieHolder;
+        protected LinearLayout movieTitleHolder;
+        protected ToggleButton favouriteButton;
+        private ImageView poster;
+        private TextView movieName;
+        private LinearLayout full_layout;
+        private View v;
+
+        public MoviesViewHolder(View itemView) {
+            super(itemView);
+            v = itemView;
+            poster = itemView.findViewById(R.id.moviePosterImg);
+            movieName = itemView.findViewById(R.id.movieName);
+            full_layout = (LinearLayout) v.findViewById(R.id.movie_layout);
+            movieHolder = (LinearLayout) v.findViewById(R.id.movieHolder);
+            movieTitleHolder = (LinearLayout) v.findViewById(R.id.movieTitleHolder);
+            favouriteButton = (ToggleButton) v.findViewById(R.id.favouriteButton);
+
+        }
     }
 
 }

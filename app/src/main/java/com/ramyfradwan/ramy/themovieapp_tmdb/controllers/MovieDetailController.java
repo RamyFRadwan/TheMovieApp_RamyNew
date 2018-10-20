@@ -7,10 +7,13 @@ import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseCoreController;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieReviewsResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieTrailerResponse;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.Review;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.Trailer;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.network.ApiClient;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.network.ConfigApi;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -38,10 +41,10 @@ public class MovieDetailController extends BaseCoreController<MovieDetailControl
         call.enqueue(new Callback<MovieDetailsResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieDetailsResponse> call, @NonNull Response<MovieDetailsResponse> response) {
-                if (null != response.body())
+                if (null != response.body()) {
                     Log.e("movies count  :  ", response.body().getName() + "");
-
-                movieDetailControllerListener.onFinishController(response.body(), Constants.GET_MOVIE_DETAIL);
+                    movieDetailControllerListener.onFinishController(response.body(), Constants.GET_MOVIE_DETAIL);
+                }
             }
 
             @Override
@@ -65,10 +68,10 @@ public class MovieDetailController extends BaseCoreController<MovieDetailControl
         call.enqueue(new Callback<MovieTrailerResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieTrailerResponse> call, @NonNull Response<MovieTrailerResponse> response) {
-                if (null != response.body())
+                if (null != response.body()) {
                     Log.e("MovieTrailer count: ", response.body() + "");
-
-                movieDetailControllerListener.onTrailersRetrieved(response.body().getResults());
+                    movieDetailControllerListener.onTrailersRetrieved((ArrayList<Trailer>) response.body().getResults());
+                }
             }
 
             @Override
@@ -92,10 +95,10 @@ public class MovieDetailController extends BaseCoreController<MovieDetailControl
         call.enqueue(new Callback<MovieReviewsResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieReviewsResponse> call, @NonNull Response<MovieReviewsResponse> response) {
-                if (null != response.body())
+                if (null != response.body()) {
                     Log.e("MovieReviews count: ", response.body() + "");
-
-                movieDetailControllerListener.onReviewsRetrieved(response.body().getResults());
+                    movieDetailControllerListener.onReviewsRetrieved((ArrayList<Review>) response.body().getResults());
+                }
             }
 
             @Override

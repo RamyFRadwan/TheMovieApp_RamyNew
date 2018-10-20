@@ -2,10 +2,40 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseResponseModel;
 
 import java.util.List;
 
-public class MovieReviewsResponse {
+public class MovieReviewsResponse extends BaseResponseModel {
+
+    @SerializedName("id")
+
+    @Expose
+    private int id;
+    @SerializedName("page")
+    @Expose
+    private int page;
+    @SerializedName("results")
+    @Expose
+    private List<Review> results = null;
+    @SerializedName("total_pages")
+    @Expose
+    private int totalPages;
+    @SerializedName("total_results")
+    @Expose
+    private int totalResults;
+
+    public MovieReviewsResponse() {
+
+    }
+
+    public MovieReviewsResponse(int id, int page, List<Review> results, int totalPages, int totalResults) {
+        this.id = id;
+        this.page = page;
+        this.results = results;
+        this.totalPages = totalPages;
+        this.totalResults = totalResults;
+    }
 
     public int getId() {
         return id;
@@ -46,35 +76,5 @@ public class MovieReviewsResponse {
     public void setTotalResults(int totalResults) {
         this.totalResults = totalResults;
     }
-
-    public MovieReviewsResponse() {
-
-    }
-
-    @SerializedName("id")
-
-    @Expose
-    private int id;
-    @SerializedName("page")
-    @Expose
-    private int page;
-
-    public MovieReviewsResponse(int id, int page, List<Review> results, int totalPages, int totalResults) {
-        this.id = id;
-        this.page = page;
-        this.results = results;
-        this.totalPages = totalPages;
-        this.totalResults = totalResults;
-    }
-
-    @SerializedName("results")
-    @Expose
-    private List<Review> results = null;
-    @SerializedName("total_pages")
-    @Expose
-    private int totalPages;
-    @SerializedName("total_results")
-    @Expose
-    private int totalResults;
 
 }
