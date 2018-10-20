@@ -13,4 +13,5 @@
     <dimen name="card_elevation">1dp</dimen>
     <dimen name="card_corner_radius">0dp</dimen>
     <dimen name="margin20">20dp</dimen>
+    <dimen name="text_X_large">20sp</dimen>
 </resources>

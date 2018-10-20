@@ -138,7 +138,10 @@
                     android:text="@string/trailers_title"
                     android:textAppearance="?android:textAppearanceLarge"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_large" />
+                    android:textStyle="bold"
+                    android:layout_margin="@dimen/margin_8"
+                    android:padding="@dimen/margin_8"
+                    android:textSize="@dimen/text_X_large" />
 
 
                 <android.support.v7.widget.RecyclerView
@@ -156,7 +159,10 @@
                     android:text="@string/reviews_title"
                     android:textAppearance="?android:textAppearanceLarge"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_large" />
+                    android:textStyle="bold"
+                    android:layout_margin="@dimen/margin_8"
+                    android:padding="@dimen/margin_8"
+                    android:textSize="@dimen/text_X_large" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_item_reviews"
