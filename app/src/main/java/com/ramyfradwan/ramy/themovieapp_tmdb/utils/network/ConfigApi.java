@@ -2,6 +2,8 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.utils.network;
 
 
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieReviewsResponse;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieTrailerResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MoviesResponse;
 
 import retrofit2.Call;
@@ -19,6 +21,12 @@ public interface ConfigApi {
         @GET("movie/{id}")
         Call<MovieDetailsResponse> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
 
+
+        @GET("{id}/reviews")
+        Call<MovieReviewsResponse> getMovieReview(@Path("id") int movieId, @Query("api_key") String apiKey);
+
+        @GET("{id}/videos")
+        Call<MovieTrailerResponse> getMovieTrailer(@Path("id") int movieId, @Query("api_key") String apiKey);
+
 //        @GET(" http://image.tmdb.org/t/p/w185//")
 }
-
