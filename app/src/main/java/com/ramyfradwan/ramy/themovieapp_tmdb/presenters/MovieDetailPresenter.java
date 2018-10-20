@@ -9,8 +9,12 @@ import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseResponseModel;
 import com.ramyfradwan.ramy.themovieapp_tmdb.controllers.MovieDetailController;
 import com.ramyfradwan.ramy.themovieapp_tmdb.controllers.MovieDetailControllerListener;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.Review;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.Trailer;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.network.ConnectionStatus;
+
+import java.util.List;
 
 public class MovieDetailPresenter extends BasePresenter<MovieDetailController, MovieDetailPresenterLisener>
         implements MovieDetailControllerListener {
@@ -28,6 +32,8 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailController, M
         try {
             if (Constants.CONNECTED == connectionStatus.getStatus()) {
                 controller.getMovieDetails(className, movieId);
+                controller.getMovieReviews(className,movieId);
+                controller.getMovieTrailers(className,movieId);
                 connectionStatus.tvConnectionStatus.setText(R.string.connected);
             } else
                 connectionStatus.tvConnectionStatus.setText(R.string.no_internet);
@@ -44,5 +50,15 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailController, M
                 listener.getMovieDetails((MovieDetailsResponse) response);
             }
         }
+    }
+
+    @Override
+    public void onTrailersRetrieved(List<Trailer> trailers) {
+        listener.onTrailersRetrieved(trailers);
+    }
+
+    @Override
+    public void onReviewsRetrieved(List<Review> reviews) {
+        listener.onReviewsRetrieved(reviews);
     }
 }
