@@ -1,6 +1,5 @@
 package com.ramyfradwan.ramy.themovieapp_tmdb.presenters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ramyfradwan.ramy.themovieapp_tmdb.R;
@@ -20,7 +19,7 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailController, M
         implements MovieDetailControllerListener {
     private ConnectionStatus connectionStatus;
 
-    public MovieDetailPresenter(Context context, MovieDetailPresenterLisener movieDetailPresenterLisener) {
+    public MovieDetailPresenter( MovieDetailPresenterLisener movieDetailPresenterLisener) {
         controller = new MovieDetailController(this);
         connectionStatus = new ConnectionStatus();
         this.listener = movieDetailPresenterLisener;

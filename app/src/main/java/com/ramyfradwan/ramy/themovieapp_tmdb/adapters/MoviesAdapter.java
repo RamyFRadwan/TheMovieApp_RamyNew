@@ -97,7 +97,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                                 .commit();
                 } else {
                     Intent intent = new Intent(context, FilmDetailActivity.class);
-                    intent.putExtra(FilmDetailFragment.ARG_ITEM_ID, movies.get(position).getId());
+                    intent.putExtra(Constants.ID, movies.get(position).getId());
 
                     context.startActivity(intent);
                 }

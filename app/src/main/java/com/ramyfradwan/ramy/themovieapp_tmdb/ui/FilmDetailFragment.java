@@ -72,7 +72,7 @@ public class FilmDetailFragment extends android.app.Fragment
     private ImageView poster, background;
     private RecyclerView reviewsList, trailersList;
     private View view;
-    private MovieDetailPresenter presenter = new MovieDetailPresenter(getActivity(),this);
+    private MovieDetailPresenter presenter;
 
     /**
      * The dummy content this fragment is presenting.
@@ -88,7 +88,6 @@ public class FilmDetailFragment extends android.app.Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
@@ -107,6 +106,7 @@ public class FilmDetailFragment extends android.app.Fragment
         View view = inflater.inflate(R.layout.film_detail, container, false);
         this.view = view;
         initUI(view);
+        presenter = new MovieDetailPresenter(this);
         sh = view.getContext().getSharedPreferences("shared", Context.MODE_PRIVATE);
         im_path = sh.getString("posterpath", "no");
         pd_path = sh.getString("backdroppath", "no");
@@ -117,8 +117,8 @@ public class FilmDetailFragment extends android.app.Fragment
         if (arguments != null) {
             hasArguments = true;
             id = arguments.getInt(Constants.ID);
-            if (id != 0 ){
-                presenter.getMovieDetails(FilmDetailFragment.class.getSimpleName(),id);
+            if (id != 0) {
+                presenter.getMovieDetails(FilmDetailFragment.class.getSimpleName(), id);
             }
             if (arguments.getBoolean("twoPane")) {
                 mTwoPane = true;
@@ -310,7 +310,6 @@ public class FilmDetailFragment extends android.app.Fragment
     }
 
 
-
     private void setMovieData(MovieDetailsResponse movie) {
         rating.setText(
                 new StringBuilder()
@@ -336,6 +335,7 @@ public class FilmDetailFragment extends android.app.Fragment
             Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
         }
     }
+
     @Override
     public void getMovieDetails(MovieDetailsResponse response) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -380,5 +380,6 @@ public class FilmDetailFragment extends android.app.Fragment
     public void onConnectionError() {
 
     }
+
 
 }

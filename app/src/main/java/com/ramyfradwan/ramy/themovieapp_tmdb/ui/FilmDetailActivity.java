@@ -24,7 +24,8 @@ import java.util.ArrayList;
  * in a {@link FilmListActivity}.
  */
 public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
-        implements MovieDetailPresenterLisener {
+        implements
+        MovieDetailPresenterLisener{
 
     private ConnectionStatus connectionStatus = new ConnectionStatus();
     private int id;
@@ -38,7 +39,7 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
 
         setupPresenter();
 
-        if (0 != getIntent().getIntExtra(FilmDetailFragment.ARG_ITEM_ID, 0)) {
+        if (0 != getIntent().getIntExtra(Constants.ID, 0)) {
             id = getIntent().getIntExtra(Constants.ID, 0);
 
         } else finish();
@@ -77,7 +78,7 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
 
     @Override
     protected MovieDetailPresenter setupPresenter() {
-        return new MovieDetailPresenter(this, this);
+        return new MovieDetailPresenter( this);
     }
 
     @Override
@@ -120,4 +121,5 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
     public void onConnectionError() {
 
     }
+
 }
