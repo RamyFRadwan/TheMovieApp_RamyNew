@@ -32,6 +32,7 @@ public class MovieDetailActivity extends BaseActivity<MovieDetailPresenter>
     private TextView rating, releaseDate, overview;
     private ImageView poster, background;
     private ConnectionStatus connectionStatus = new ConnectionStatus();
+    private int id;
 
     private RecyclerView reviewsList, trailersList;
 
@@ -42,7 +43,6 @@ public class MovieDetailActivity extends BaseActivity<MovieDetailPresenter>
         initUI();
         connectionStatus.initConnectionStatus(this);
         setupPresenter();
-        int id;
         if (0 != getIntent().getIntExtra(Constants.ID, 0)) {
             id = getIntent().getIntExtra(Constants.ID, 0);
             presenter.getMovieDetails(getClassName(), id);

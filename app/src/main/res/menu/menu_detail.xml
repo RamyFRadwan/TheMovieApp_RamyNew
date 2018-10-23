@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/shareAction"
+        android:title="@string/share"
+        app:showAsAction="always"
+        android:icon="@drawable/if_share_227561"/>
+    <item android:id="@+id/viewFav"
+        android:title="@string/Favourites"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_play_arrow"/>
+</menu>

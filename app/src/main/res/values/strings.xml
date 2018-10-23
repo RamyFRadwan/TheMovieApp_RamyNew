@@ -22,4 +22,15 @@
     <string name="youtube_url">http://img.youtube.com/vi/</string>
     <string name="thumb_url">/0.jpg</string>
     <string name="error_retrieving_reviews">Error retrieving reviews</string>
+    <string name="share">Share</string>
+    <string name="on">ON</string>
+    <string name="youtubeUrl">http://www.youtube.com/watch?v=</string>
+    <string name="Hash_KEY">#Udacity_Movies_App</string>
+    <string name="Watch">Watch this</string>
+    <string name="dots">:</string>
+    <string name="delete_Success">Movie delete Success</string>
+    <string name="fav">fav</string>
+    <string name="Favourites">favourites</string>
+    <string name="title_film_list">Films</string>
+    <string name="title_film_detail">Film Detail</string>
 </resources>

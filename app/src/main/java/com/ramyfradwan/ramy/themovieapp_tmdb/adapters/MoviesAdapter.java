@@ -1,7 +1,9 @@
 package com.ramyfradwan.ramy.themovieapp_tmdb.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +18,8 @@ import android.widget.ToggleButton;
 import com.github.florent37.picassopalette.PicassoPalette;
 import com.ramyfradwan.ramy.themovieapp_tmdb.R;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.Movie;
-import com.ramyfradwan.ramy.themovieapp_tmdb.ui.MovieDetailActivity;
+import com.ramyfradwan.ramy.themovieapp_tmdb.ui.FilmDetailActivity;
+import com.ramyfradwan.ramy.themovieapp_tmdb.ui.FilmDetailFragment;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -25,16 +28,20 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
+    private Activity activity;
     private Context context;
     private List<Movie> movies = new ArrayList<>();
+    private boolean fav;
 
 
-    public MoviesAdapter(Context context, List<Movie> movies) {
+    public MoviesAdapter(@NonNull Activity activity,@NonNull Context context, @NonNull List<Movie> movies, boolean fav) {
         this.context = context;
         this.movies = movies;
+        this.fav = fav;
+        this.activity = activity;
     }
 
-    public MoviesAdapter(Context context) {
+    public MoviesAdapter(@NonNull Context context) {
         this.context = context;
     }
 
@@ -79,10 +86,21 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         holder.v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (fav) {
+                    Bundle arguments = new Bundle();
+                    arguments.putInt(FilmDetailFragment.ARG_ITEM_ID, movies.get(position).getId());
+                    FilmDetailFragment fragment = new FilmDetailFragment();
+                    fragment.setArguments(arguments);
+//                    if (null != context)
+                        activity.getFragmentManager().beginTransaction()
+                                .replace(R.id.film_detail_container, fragment)
+                                .commit();
+                } else {
+                    Intent intent = new Intent(context, FilmDetailActivity.class);
+                    intent.putExtra(FilmDetailFragment.ARG_ITEM_ID, movies.get(position).getId());
 
-                Intent i = new Intent(context, MovieDetailActivity.class);
-                i.putExtra(Constants.ID, movies.get(position).getId());
-                context.startActivity(i);
+                    context.startActivity(intent);
+                }
             }
         });
 

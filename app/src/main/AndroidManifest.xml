@@ -9,10 +9,28 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application android:theme="@style/AppTheme">
+        <provider
+            android:name=".db_provider.MovieProvider"
+            android:authorities="com.ramyfradwan.ramy.themovieapp_tmdb"
+            android:exported="false"
+            android:syncable="true" />
 
+        <!--<activity-->
+            <!--android:name=".ui.MoviesMainActivity"-->
+            <!--android:theme="@style/AppTheme">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".ui.MovieDetailActivity"-->
+            <!--android:theme="@style/AppTheme_NoActionBar" />-->
         <activity
-            android:name=".ui.MoviesMainActivity"
-            android:theme="@style/AppTheme">
+            android:name=".ui.FilmListActivity"
+            android:label="@string/title_film_list"
+            android:theme="@style/AppTheme_NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,9 +38,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MovieDetailActivity"
-            android:theme="@style/AppTheme_NoActionBar" />
-
+            android:name=".ui.FilmDetailActivity"
+            android:label="@string/title_film_detail"
+            android:parentActivityName=".ui.FilmListActivity"
+            android:theme="@style/AppTheme_NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ramyfradwan.ramy.themovieapp_tmdb.ui.FilmListActivity" />
+        </activity>
     </application>
 
 </manifest>
