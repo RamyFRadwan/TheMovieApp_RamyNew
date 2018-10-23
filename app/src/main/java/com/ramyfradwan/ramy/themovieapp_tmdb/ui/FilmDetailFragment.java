@@ -1,6 +1,5 @@
 package com.ramyfradwan.ramy.themovieapp_tmdb.ui;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,14 +25,23 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.ramyfradwan.ramy.themovieapp_tmdb.R;
+import com.ramyfradwan.ramy.themovieapp_tmdb.adapters.ReviewsAdapter;
+import com.ramyfradwan.ramy.themovieapp_tmdb.adapters.TrailersAdapter;
+import com.ramyfradwan.ramy.themovieapp_tmdb.db_provider.DbHelper;
 import com.ramyfradwan.ramy.themovieapp_tmdb.db_provider.MovieContract;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.Review;
+import com.ramyfradwan.ramy.themovieapp_tmdb.model.Trailer;
+import com.ramyfradwan.ramy.themovieapp_tmdb.presenters.MovieDetailPresenter;
+import com.ramyfradwan.ramy.themovieapp_tmdb.presenters.MovieDetailPresenterLisener;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A fragment representing a single Film detail screen.
@@ -40,7 +49,8 @@ import java.io.FileOutputStream;
  * in two-pane mode (on tablets) or a {@link FilmDetailActivity}
  * on handsets.
  */
-public class FilmDetailFragment extends android.app.Fragment {
+public class FilmDetailFragment extends android.app.Fragment
+        implements MovieDetailPresenterLisener {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -61,6 +71,8 @@ public class FilmDetailFragment extends android.app.Fragment {
     private TextView rating, releaseDate, overview;
     private ImageView poster, background;
     private RecyclerView reviewsList, trailersList;
+    private View view;
+    private MovieDetailPresenter presenter = new MovieDetailPresenter(getActivity(),this);
 
     /**
      * The dummy content this fragment is presenting.
@@ -81,8 +93,8 @@ public class FilmDetailFragment extends android.app.Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
 
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+//            Activity activity = this.getActivity();
+//            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
 //            if (appBarLayout != null) {
 //                appBarLayout.setTitle(mItem.content);
 //            }
@@ -93,62 +105,60 @@ public class FilmDetailFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.film_detail, container, false);
-
+        this.view = view;
+        initUI(view);
         sh = view.getContext().getSharedPreferences("shared", Context.MODE_PRIVATE);
         im_path = sh.getString("posterpath", "no");
         pd_path = sh.getString("backdroppath", "no");
-//        final DbHelper db = new DbHelper(getActivity());
+        final DbHelper db = new DbHelper(getActivity());
         Bundle arguments = getArguments();
 
+        int id;
         if (arguments != null) {
             hasArguments = true;
-            movie = (MovieDetailsResponse) arguments.get("Movie");
+            id = arguments.getInt(Constants.ID);
+            if (id != 0 ){
+                presenter.getMovieDetails(FilmDetailFragment.class.getSimpleName(),id);
+            }
             if (arguments.getBoolean("twoPane")) {
                 mTwoPane = true;
-                setMovieData(movie, view);
 
             } else {
 //                setMovieData(movie, view);
                 Configuration config = getActivity().getResources().getConfiguration();
                 Toolbar toolbar;
-                if (getResources().getConfiguration().orientation
-                        == Configuration.ORIENTATION_PORTRAIT) {
-
-                    toolbar = (Toolbar) view.findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-                    AppCompatActivity activity = (AppCompatActivity) getActivity();
-                    activity.setSupportActionBar(toolbar);
-//                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-                    CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout)
-                            view.findViewById(R.id.collapsingToolbarLayout);
-//                    toolbarLayout.setTitle(movie.getName());
-                    final ImageView header_imageView = (ImageView) view.findViewById(R.id.poster);
-                    if (!fav) {
-                        Picasso
-                                .get()
-                                .load(Constants.basePosterPath + movie.getBackdropPath())
-                                .into(header_imageView);
-                    } else if (fav) {
-                        Picasso
-                                .get()
-                                .load(new File(pd_path))
-                                .into(header_imageView);
-
-                        Log.v("ssssssssssss", "" + pd_path);
-                        Log.v("ssssssssssss", Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
-
-                    }
+//                if (getResources().getConfiguration().orientation
+//                        == Configuration.ORIENTATION_PORTRAIT) {
 //
-//                    Picasso
-//                            .with(getActivity())
-//                            .load(movie.getPosterURI("w500", "backdrop"))
-//                            .into(header_imageView);
+//                    toolbar = (Toolbar) view.findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+//                    AppCompatActivity activity = (AppCompatActivity) getActivity();
+//                    activity.setSupportActionBar(toolbar);
+////                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //
-                }
-                toolbar = (Toolbar) view.findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-                AppCompatActivity activity = (AppCompatActivity) getActivity();
-                activity.setSupportActionBar(toolbar);
-                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                    CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout)
+//                            view.findViewById(R.id.collapsingToolbarLayout);
+////                    toolbarLayout.setTitle(movie.getName());
+//                    final ImageView header_imageView = (ImageView) view.findViewById(R.id.poster);
+//                    if (!fav) {
+//                        Picasso
+//                                .get()
+//                                .load(Constants.basePosterPath + movie.getBackdropPath())
+//                                .into(header_imageView);
+//                    } else if (fav) {
+//                        Picasso
+//                                .get()
+//                                .load(new File(pd_path))
+//                                .into(header_imageView);
+//
+//                        Log.v("ssssssssssss", "" + pd_path);
+//                        Log.v("ssssssssssss", Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
+//
+//                    }
+//                }
+//                toolbar = (Toolbar) view.findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+//                AppCompatActivity activity = (AppCompatActivity) getActivity();
+//                activity.setSupportActionBar(toolbar);
+//                activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
             assert movie != null;
 
@@ -301,12 +311,13 @@ public class FilmDetailFragment extends android.app.Fragment {
 
 
 
-    private void setMovieData(MovieDetailsResponse movie, View view) {
+    private void setMovieData(MovieDetailsResponse movie) {
         rating.setText(
                 new StringBuilder()
-                        .append(movie.getVote_average())
+                        .append(String.valueOf(movie.getVote_average()))
                         .append(getString(R.string.separator))
-                        .append(movie.getVote_count()).toString());
+                        .append(movie.getVote_count())
+                        .toString());
 
         overview.setText(movie.getOverview());
 
@@ -325,4 +336,49 @@ public class FilmDetailFragment extends android.app.Fragment {
             Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
         }
     }
+    @Override
+    public void getMovieDetails(MovieDetailsResponse response) {
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout)
+                view.findViewById(R.id.collapsingToolbarLayout);
+        toolbarLayout.setTitle(response.getName());
+        setMovieData(response);
+    }
+
+    @Override
+    public void onTrailersRetrieved(ArrayList<Trailer> trailers) {
+        TrailersAdapter trailersAdapter;
+        if (null != trailers) {
+            trailersAdapter =
+                    new TrailersAdapter(getActivity().getBaseContext(), trailers);
+            trailersList.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
+            trailersList.setAdapter(trailersAdapter);
+        }
+    }
+
+    @Override
+    public void onReviewsRetrieved(ArrayList<Review> reviews) {
+        ReviewsAdapter reviewsAdapter;
+        if (null != reviews) {
+            reviewsAdapter =
+                    new ReviewsAdapter(getActivity().getBaseContext(), reviews);
+            reviewsList.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
+            reviewsList.setAdapter(reviewsAdapter);
+        }
+    }
+
+    @Override
+    public void handleError(String errorMessage, String tag) {
+
+    }
+
+    @Override
+    public void onConnectionError() {
+
+    }
+
 }

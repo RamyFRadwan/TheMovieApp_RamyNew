@@ -2,20 +2,10 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.ramyfradwan.ramy.themovieapp_tmdb.R;
-import com.ramyfradwan.ramy.themovieapp_tmdb.adapters.ReviewsAdapter;
-import com.ramyfradwan.ramy.themovieapp_tmdb.adapters.TrailersAdapter;
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseActivity;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.Review;
@@ -26,7 +16,6 @@ import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.network.ConnectionStatus;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * An activity representing a single Film detail screen. This
@@ -39,34 +28,21 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
 
     private ConnectionStatus connectionStatus = new ConnectionStatus();
     private int id;
-    private RecyclerView reviewsList, trailersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
 
         connectionStatus.initConnectionStatus(this);
 
         setupPresenter();
 
-        if (0 != getIntent().getIntExtra(Constants.ID, 0)) {
+        if (0 != getIntent().getIntExtra(FilmDetailFragment.ARG_ITEM_ID, 0)) {
             id = getIntent().getIntExtra(Constants.ID, 0);
-            presenter.getMovieDetails(getClassName(), id);
 
         } else finish();
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -83,19 +59,20 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
         //
         // http://developer.android.com/guide/components/fragments.html
         //
-//        if (savedInstanceState == null) {
-//            // Create the detail fragment and add it to the activity
-//            // using a fragment transaction.
-//            Bundle arguments = new Bundle();
-//            arguments.putString(FilmDetailFragment.ARG_ITEM_ID,
-//                    getIntent().getStringExtra(FilmDetailFragment.ARG_ITEM_ID));
+        if (savedInstanceState == null) {
+            // Create the detail fragment and add it to the activity
+            // using a fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putString(FilmDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(FilmDetailFragment.ARG_ITEM_ID));
 //            arguments.putSerializable("Movie",movie);
-//            FilmDetailFragment fragment = new FilmDetailFragment();
-//            fragment.setArguments(arguments);
-//            getFragmentManager().beginTransaction()
-//                    .add(R.id.film_detail_container, fragment)
-//                    .commit();
-//        }
+            arguments.putInt(Constants.ID,id);
+            FilmDetailFragment fragment = new FilmDetailFragment();
+            fragment.setArguments(arguments);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.film_detail_container, fragment)
+                    .commit();
+        }
     }
 
     @Override
@@ -121,50 +98,17 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
 
     @Override
     public void getMovieDetails(MovieDetailsResponse response) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        AppCompatActivity activity = (AppCompatActivity) FilmDetailActivity.this;
-        activity.setSupportActionBar(toolbar);
-        Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout)
-                findViewById(R.id.collapsingToolbarLayout);
-        toolbarLayout.setTitle(response.getName());
-//        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(FilmDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(FilmDetailFragment.ARG_ITEM_ID));
-            arguments.putSerializable("Movie",response);
-            FilmDetailFragment fragment = new FilmDetailFragment();
-            fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.film_detail_container, fragment)
-                    .commit();
-//        }
-//
     }
 
     @Override
     public void onTrailersRetrieved(ArrayList<Trailer> trailers) {
-        TrailersAdapter trailersAdapter;
-        if (null != trailers) {
-            trailersAdapter =
-                    new TrailersAdapter(this, trailers);
-            trailersList.setLayoutManager(new LinearLayoutManager(this));
-            trailersList.setAdapter(trailersAdapter);
-        }
+
     }
 
     @Override
     public void onReviewsRetrieved(ArrayList<Review> reviews) {
-        ReviewsAdapter reviewsAdapter;
-        if (null != reviews) {
-            reviewsAdapter =
-                    new ReviewsAdapter(this, reviews);
-            reviewsList.setLayoutManager(new LinearLayoutManager(this));
-            reviewsList.setAdapter(reviewsAdapter);
-        }
+
     }
 
     @Override
