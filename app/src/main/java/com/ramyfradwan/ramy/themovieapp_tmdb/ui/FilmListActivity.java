@@ -97,7 +97,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
                 new MoviesAdapter( this);
 
         //Load first page
-        presenter.getPopularMovies(MoviesMainFragment.class.getSimpleName(), pageIndex);
+        presenter.getPopularMovies(getClassName(), pageIndex);
 
 
         if (null != jellyToggleButton) {
@@ -117,7 +117,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
 
                         /// /Make a new call
                         presenter.getTopRatedMovies(
-                                MoviesMainFragment.class.getSimpleName()
+                                getClassName()
                                 , pageIndex);
                     }
                     if (state.name().equalsIgnoreCase(getString(R.string.left))) {
@@ -131,7 +131,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
                         //Change SortType
                         sortType = Constants.GET_POP_MOVIES;
                         /// /Make a new call
-                        presenter.getPopularMovies(MoviesMainFragment.class.getSimpleName(), pageIndex);
+                        presenter.getPopularMovies(getClassName(), pageIndex);
                     }
                 }
             });
@@ -193,7 +193,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
     public void onLoadMoreRequested() {
         if (pageIndex <= pageCount) {
             pageIndex++;
-            presenter.loadMorePages(MoviesMainFragment.class.getSimpleName(), pageIndex, sortType);
+            presenter.loadMorePages(getClassName(), pageIndex, sortType);
 
         }
 
