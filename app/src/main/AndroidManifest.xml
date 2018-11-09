@@ -30,7 +30,7 @@
         <activity
             android:name=".ui.FilmListActivity"
             android:label="@string/title_film_list"
-            android:theme="@style/AppTheme_NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

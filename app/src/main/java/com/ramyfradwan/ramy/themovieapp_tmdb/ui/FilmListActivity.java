@@ -1,16 +1,24 @@
 package com.ramyfradwan.ramy.themovieapp_tmdb.ui;
 
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.State;
 import com.ramyfradwan.ramy.themovieapp_tmdb.R;
 import com.ramyfradwan.ramy.themovieapp_tmdb.adapters.MoviesAdapter;
 import com.ramyfradwan.ramy.themovieapp_tmdb.base.BaseActivity;
+import com.ramyfradwan.ramy.themovieapp_tmdb.db_provider.MovieContract;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.Movie;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MoviesResponse;
 import com.ramyfradwan.ramy.themovieapp_tmdb.presenters.MoviesPresenter;
@@ -19,6 +27,7 @@ import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.network.ConnectionStatus;
 import com.rockerhieu.rvadapter.endless.EndlessRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,8 +47,20 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+
+    private String title;
+    private String image_path, backdrop_path;
+    private String overView;
+    private String date;
+    private double rating;
+    private long Movie_id;
+    private MoviesAdapter adapter;
+    private int _id;
+    private ProgressBar progressBar;
+    private ImageView no_favourites_icon;
+
     private LinearLayoutManager mStaggeredLayoutManager;
-    private boolean mTwoPane;
+    private boolean mTwoPane, fav;
     private RecyclerView movieRV;
     private JellyToggleButton jellyToggleButton;
     private String sortType = Constants.GET_POP_MOVIES;
@@ -48,23 +69,11 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
     private EndlessRecyclerViewAdapter endlessRecyclerViewAdapter;
     private int pageCount = 0;
     private ConnectionStatus connectionStatus = new ConnectionStatus();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film_list);
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        toolbar.setTitle(getTitle());
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         if (findViewById(R.id.film_detail_container) != null) {
             // The detail container view will be present only in the
@@ -94,7 +103,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
 
         connectionStatus.initConnectionStatus(this);
         moviesAdapter =
-                new MoviesAdapter( this);
+                new MoviesAdapter(this);
 
         //Load first page
         presenter.getPopularMovies(getClassName(), pageIndex);
@@ -107,7 +116,9 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
                     if (state.name().equalsIgnoreCase(getString(R.string.right))) {
                         //reset the recyclerViewAdapter
                         moviesAdapter.clear();
-
+                        fav = false;
+                        no_favourites_icon.setVisibility(View.GONE);
+                        jellyToggleButton.setBackgroundColor(Color.TRANSPARENT);
                         //reset the counters before the call
                         pageIndex = 1;
                         pageCount = 0;
@@ -123,6 +134,9 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
                     if (state.name().equalsIgnoreCase(getString(R.string.left))) {
                         //reset the recyclerViewAdapter
                         moviesAdapter.clear();
+                        fav = false;
+                        no_favourites_icon.setVisibility(View.GONE);
+                        jellyToggleButton.setBackgroundColor(Color.BLUE);
 
                         //reset the counters before the call
                         pageCount = 0;
@@ -143,7 +157,8 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
     private void initUI() {
         jellyToggleButton = this.findViewById(R.id.moviesTypeToggle);
         movieRV = this.findViewById(R.id.moviesList);
-
+        no_favourites_icon = this.findViewById(R.id.nofavs);
+        no_favourites_icon.setVisibility(View.GONE);
     }
 
 
@@ -151,10 +166,6 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
     protected MoviesPresenter setupPresenter() {
         return new MoviesPresenter(this);
     }
-//
-//    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-//        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
-//    }
 
     @Override
     public void getMoviesResponse(MoviesResponse moviesResponse) {
@@ -171,7 +182,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
 
         } else {
             moviesAdapter =
-                    new MoviesAdapter(this,this, movies, mTwoPane);
+                    new MoviesAdapter(this, this, movies, mTwoPane, fav);
             endlessRecyclerViewAdapter = new EndlessRecyclerViewAdapter(moviesAdapter, this);
             movieRV.setAdapter(endlessRecyclerViewAdapter);
 
@@ -198,73 +209,62 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
         }
 
     }
-//
-//    public static class SimpleItemRecyclerViewAdapter
-//            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
-//
-//        private final ItemListActivity mParentActivity;
-//        private final List<DummyContent.DummyItem> mValues;
-//        private final boolean mTwoPane;
-//        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-//                if (mTwoPane) {
-//                    Bundle arguments = new Bundle();
-//                    arguments.putString(FilmDetailFragment.ARG_ITEM_ID, item.id);
-//                    FilmDetailFragment fragment = new FilmDetailFragment();
-//                    fragment.setArguments(arguments);
-//                    mParentActivity.getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.film_detail_container, fragment)
-//                            .commit();
-//                } else {
-//                    Context context = view.getContext();
-//                    Intent intent = new Intent(context, FilmDetailActivity.class);
-//                    intent.putExtra(FilmDetailFragment.ARG_ITEM_ID, item.id);
-//
-//                    context.startActivity(intent);
-//                }
-//            }
-//        };
-//
-//        SimpleItemRecyclerViewAdapter(FilmListActivity parent,
-//                                      List<DummyContent.DummyItem> items,
-//                                      boolean twoPane) {
-//            mValues = items;
-//            mParentActivity = parent;
-//            mTwoPane = twoPane;
-//        }
-//
-//        @Override
-//        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//            View view = LayoutInflater.from(parent.getContext())
-//                    .inflate(R.layout.film_list_content, parent, false);
-//            return new ViewHolder(view);
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(final ViewHolder holder, int position) {
-//            holder.mIdView.setText(mValues.get(position).id);
-//            holder.mContentView.setText(mValues.get(position).content);
-//
-//            holder.itemView.setTag(mValues.get(position));
-//            holder.itemView.setOnClickListener(mOnClickListener);
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return mValues.size();
-//        }
-//
-//        class ViewHolder extends RecyclerView.ViewHolder {
-//            final TextView mIdView;
-//            final TextView mContentView;
-//
-//            ViewHolder(View view) {
-//                super(view);
-//                mIdView = (TextView) view.findViewById(R.id.id_text);
-//                mContentView = (TextView) view.findViewById(R.id.content);
-//            }
-//        }
-//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+
+        MenuItem action_show_fav = menu.findItem(R.id.viewFav);
+
+        action_show_fav.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                fav = true;
+                fetchFavouritesMovies();
+                jellyToggleButton.setBackgroundColor(Color.GRAY);
+                return true;
+            }
+        });
+        return true;
+    }
+
+
+    //Fetch Favourite Movies
+    private void fetchFavouritesMovies() {
+        List<Movie> favouriteMovies = new ArrayList<>();
+        final Cursor c = getContentResolver()
+                .query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
+        if (c != null && c.moveToFirst()) {
+
+            do {
+                image_path = c.getString(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE));
+                title = c.getString(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+                overView = c.getString(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW));
+                date = c.getString(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_DATE));
+                rating = c.getDouble(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING));
+                Movie_id = c.getLong(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
+                backdrop_path = c.getString(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP));
+
+                _id = c.getInt(c.getColumnIndex(MovieContract.MovieEntry._ID));
+                Movie movie = new Movie(Movie_id, title, overView, date, image_path, backdrop_path, rating);
+                favouriteMovies.add(movie);
+            } while (c.moveToNext());
+        }
+
+        assert c != null;
+        c.close();
+        if (favouriteMovies.size() > 0) {
+            no_favourites_icon.setVisibility(View.GONE);
+            movieRV.setVisibility(View.VISIBLE);
+            moviesAdapter =
+                    new MoviesAdapter(this, this, favouriteMovies, mTwoPane, fav);
+            endlessRecyclerViewAdapter = new EndlessRecyclerViewAdapter(moviesAdapter, this);
+            movieRV.setAdapter(endlessRecyclerViewAdapter);
+
+        } else {
+            no_favourites_icon.setVisibility(View.VISIBLE);
+        }
+
+    }
 }

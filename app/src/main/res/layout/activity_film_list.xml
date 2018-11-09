@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.MoviesMainActivity">
+    tools:context=".ui.FilmListActivity">
 
     <include layout="@layout/activity_connection_status" />
 
@@ -55,6 +55,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toggleContainer" />
+
+    <ImageView
+        android:id="@+id/nofavs"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="68dp"
+        android:src="@drawable/fav_unchecked"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/moviesList"
         app:layout_constraintTop_toBottomOf="@id/toggleContainer" />
 
 </android.support.constraint.ConstraintLayout>

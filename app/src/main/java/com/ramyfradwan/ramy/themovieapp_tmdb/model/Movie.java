@@ -2,10 +2,11 @@ package com.ramyfradwan.ramy.themovieapp_tmdb.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Movie {
+public class Movie implements Serializable {
     @SerializedName("poster_path")
     private String posterPath;
     @SerializedName("adult")
@@ -52,6 +53,16 @@ public class Movie {
         this.voteCount = voteCount;
         this.video = video;
         this.voteAverage = voteAverage;
+    }
+
+    public Movie(long movie_id, String title, String overView, String date, String image_path, String backdrop_path, double rating){
+        this.id = (int)movie_id;
+        this.title = title;
+        this.overview = overView;
+        this.releaseDate = date;
+        this.posterPath = image_path;
+        this.backdropPath = backdrop_path;
+        this.voteAverage = rating;
     }
 
     public String getPosterPath() {

@@ -64,10 +64,8 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(FilmDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(FilmDetailFragment.ARG_ITEM_ID));
-//            arguments.putSerializable("Movie",movie);
-            arguments.putInt(Constants.ID,id);
+            arguments.putBundle(Constants.movie, getIntent().getExtras());
+
             FilmDetailFragment fragment = new FilmDetailFragment();
             fragment.setArguments(arguments);
             getFragmentManager().beginTransaction()

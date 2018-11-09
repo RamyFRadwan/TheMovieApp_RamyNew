@@ -14,4 +14,7 @@ public class Constants {
 
     //TODO:: Remove before publish
     public static final String API_KEY = "8eba4d6ed400df7cf254bca20f271ff0";
+    public static String Fav =  "FAV";
+    public static String movie = "MOVIE";
+    public static String FILM = "FILM";
 }

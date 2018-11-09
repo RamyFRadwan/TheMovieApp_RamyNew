@@ -63,6 +63,17 @@ public class MovieDetailsResponse extends BaseResponseModel implements Serializa
         release_date = in.readString();
     }
 
+    public MovieDetailsResponse(int id, String title, String overView, String date, String im_path, String pd_path, double rating) {
+        super();
+        this.id = id;
+        this.name = title;
+        this.overview = overView;
+        this.release_date = date;
+        this.posterPath = im_path;
+        this.backdropPath = pd_path;
+        this.vote_average = (float) rating;
+    }
+
     public Integer getId() {
         return id;
     }
