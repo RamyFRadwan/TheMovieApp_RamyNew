@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -55,17 +54,12 @@ public class FilmDetailFragment extends android.app.Fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
-    private static final String LOG_TAG = FilmDetailFragment.class.getSimpleName();
     private boolean hasArguments;
     private MovieDetailsResponse movie;
     private boolean isFavoured;
-    private MenuItem menuItem;
-    private boolean trailerFound;
     public static String Poster;
     private boolean mTwoPane;
     private SharedPreferences sh;
-    private String im_path;
-    private String pd_path;
     private boolean fav;
     private TextView rating;
     private TextView releaseDate;
@@ -74,8 +68,6 @@ public class FilmDetailFragment extends android.app.Fragment
     private RecyclerView reviewsList, trailersList;
     private View view;
     private MovieDetailPresenter presenter;
-    private String date, title, overView;
-    private double rating_vote;
     private Movie film;
     private MovieDetailsResponse mFilm;
 
@@ -93,16 +85,6 @@ public class FilmDetailFragment extends android.app.Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-
-//            Activity activity = this.getActivity();
-//            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-//            if (appBarLayout != null) {
-//                appBarLayout.setTitle(mItem.content);
-//            }
-        }
     }
 
     @Override
@@ -173,7 +155,7 @@ public class FilmDetailFragment extends android.app.Fragment
 
                         isFavoured = true;
                         add_bookmark.setText(R.string.on);
-
+                        add_bookmark.setChecked(isFavoured);
                     }
                     //When Movie is removed
                     else {
@@ -187,7 +169,6 @@ public class FilmDetailFragment extends android.app.Fragment
                         }
 
                         isFavoured = false;
-//                        c.close();
                         add_bookmark.setChecked(isFavoured);
 
 
@@ -217,7 +198,6 @@ public class FilmDetailFragment extends android.app.Fragment
                             file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
-                            movie.setBackdropPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getName());
                             ostream.close();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -253,7 +233,6 @@ public class FilmDetailFragment extends android.app.Fragment
                             file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
-                            movie.setBackdropPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getName());
                             ostream.close();
                         } catch (Exception e) {
                             e.printStackTrace();
