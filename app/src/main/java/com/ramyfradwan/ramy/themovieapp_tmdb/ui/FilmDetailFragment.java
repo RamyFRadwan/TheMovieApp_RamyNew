@@ -288,17 +288,30 @@ public class FilmDetailFragment extends android.app.Fragment
 
         releaseDate.setText(movie.getRelease_date());
         Log.e("background", movie.getBackdropPath());
+        if(!fav) {
+            try {
 
-        try {
+                Picasso.get()
+                        .load(Constants.basePosterPath + movie.getPosterPath())
+                        .into(poster);
+                Picasso.get()
+                        .load(Constants.basePosterPath + movie.getBackdropPath())
+                        .into(background);
+            } catch (Exception e) {
+                Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
+            }
+        }else {
+            try {
 
-            Picasso.get()
-                    .load(Constants.basePosterPath + movie.getPosterPath())
-                    .into(poster);
-            Picasso.get()
-                    .load(Constants.basePosterPath + movie.getBackdropPath())
-                    .into(background);
-        } catch (Exception e) {
-            Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
+                Picasso.get()
+                        .load( movie.getPosterPath())
+                        .into(poster);
+                Picasso.get()
+                        .load(movie.getBackdropPath())
+                        .into(background);
+            } catch (Exception e) {
+                Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
+            }
         }
     }
 

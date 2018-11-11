@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.State;
@@ -217,7 +218,6 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
         action_show_fav.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                moviesAdapter.clear();
                 fav = true;
                 fetchFavouritesMovies();
                 jellyToggleButton.setBackgroundColor(Color.GRAY);
@@ -252,14 +252,15 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
         assert c != null;
         c.close();
         if (favouriteMovies.size() > 0) {
+            moviesAdapter.clear();
             no_favourites_icon.setVisibility(View.GONE);
             movieRV.setVisibility(View.VISIBLE);
             moviesAdapter =
                     new MoviesAdapter(this, this, favouriteMovies, mTwoPane, fav);
-            endlessRecyclerViewAdapter = new EndlessRecyclerViewAdapter(moviesAdapter, this);
-            movieRV.setAdapter(endlessRecyclerViewAdapter);
+            movieRV.setAdapter(moviesAdapter);
 
         } else {
+            Toast.makeText(getBaseContext(), R.string.no_favvss,Toast.LENGTH_LONG).show();
             no_favourites_icon.setVisibility(View.VISIBLE);
         }
 
