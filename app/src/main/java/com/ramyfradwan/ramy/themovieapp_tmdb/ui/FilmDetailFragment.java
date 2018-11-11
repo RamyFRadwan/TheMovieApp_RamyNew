@@ -26,7 +26,6 @@ import android.widget.ToggleButton;
 import com.ramyfradwan.ramy.themovieapp_tmdb.R;
 import com.ramyfradwan.ramy.themovieapp_tmdb.adapters.ReviewsAdapter;
 import com.ramyfradwan.ramy.themovieapp_tmdb.adapters.TrailersAdapter;
-import com.ramyfradwan.ramy.themovieapp_tmdb.db_provider.DbHelper;
 import com.ramyfradwan.ramy.themovieapp_tmdb.db_provider.MovieContract;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.Movie;
 import com.ramyfradwan.ramy.themovieapp_tmdb.model.MovieDetailsResponse;
@@ -114,7 +113,6 @@ public class FilmDetailFragment extends android.app.Fragment
         initUI(view);
         presenter = new MovieDetailPresenter(this);
         sh = view.getContext().getSharedPreferences("shared", Context.MODE_PRIVATE);
-        final DbHelper db = new DbHelper(getActivity());
         Bundle arguments = getArguments();
 
         int id;
@@ -137,17 +135,7 @@ public class FilmDetailFragment extends android.app.Fragment
             if (arguments.getBoolean("twoPane")) {
                 mTwoPane = true;
             } else {
-                if (!fav) {
-
-                    Picasso
-                            .get()
-                            .load(Constants.basePosterPath + movie.getBackdropPath())
-                            .into(background);
-                    Picasso.get()
-                            .load(Constants.basePosterPath + movie.getPosterPath())
-                            .into(poster);
-
-                } else if (fav) {
+                if (fav) {
                     Picasso
                             .get()
                             .load(new File(mFilm.getBackdropPath()))

@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.nightonke.jellytogglebutton.JellyToggleButton;
 import com.nightonke.jellytogglebutton.State;
@@ -54,9 +53,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
     private String date;
     private double rating;
     private long Movie_id;
-    private MoviesAdapter adapter;
-    private int _id;
-    private ProgressBar progressBar;
+
     private ImageView no_favourites_icon;
 
     private LinearLayoutManager mStaggeredLayoutManager;
@@ -174,7 +171,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
 
     @Override
     public void getMovies(List<Movie> movies, int totalPages) {
-        this.pageCount = pageCount;
+        this.pageCount = totalPages;
         if (pageIndex > 1) {
 
             moviesAdapter.appendItems(movies);
@@ -220,6 +217,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
         action_show_fav.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                moviesAdapter.clear();
                 fav = true;
                 fetchFavouritesMovies();
                 jellyToggleButton.setBackgroundColor(Color.GRAY);
@@ -246,7 +244,6 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
                 Movie_id = c.getLong(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
                 backdrop_path = c.getString(c.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP));
 
-                _id = c.getInt(c.getColumnIndex(MovieContract.MovieEntry._ID));
                 Movie movie = new Movie(Movie_id, title, overView, date, image_path, backdrop_path, rating);
                 favouriteMovies.add(movie);
             } while (c.moveToNext());
