@@ -130,12 +130,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             public void onClick(View view) {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putInt(FilmDetailFragment.ARG_ITEM_ID, movies.get(position).getId());
+                    arguments.putInt(Constants.ID, movies.get(position).getId());
                     arguments.putSerializable(Constants.FILM, movies.get(position));
                     Bundle bundle = new Bundle();
                     bundle.putBundle(Constants.movie,arguments);
                     FilmDetailFragment fragment = new FilmDetailFragment();
-                    fragment.setArguments(arguments);
+                    fragment.setArguments(bundle);
                     activity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.film_detail_container, fragment)
                             .commit();

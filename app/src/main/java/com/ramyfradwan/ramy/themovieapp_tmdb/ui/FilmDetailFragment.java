@@ -9,10 +9,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,13 +32,13 @@ import com.ramyfradwan.ramy.themovieapp_tmdb.model.Trailer;
 import com.ramyfradwan.ramy.themovieapp_tmdb.presenters.MovieDetailPresenter;
 import com.ramyfradwan.ramy.themovieapp_tmdb.presenters.MovieDetailPresenterLisener;
 import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Constants;
+import com.ramyfradwan.ramy.themovieapp_tmdb.utils.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * A fragment representing a single Film detail screen.
@@ -54,7 +52,8 @@ public class FilmDetailFragment extends Fragment
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+
+    private static final String ARG_ITEM_ID = "item_id";
     private boolean hasArguments;
     private MovieDetailsResponse movie;
     private boolean isFavoured;
@@ -71,7 +70,7 @@ public class FilmDetailFragment extends Fragment
     private MovieDetailPresenter presenter;
     private Movie film;
     private MovieDetailsResponse mFilm;
-
+    private String TAG = "TAG";
     /**
      * The dummy content this fragment is presenting.
      */
@@ -102,14 +101,15 @@ public class FilmDetailFragment extends Fragment
         if (arguments != null) {
             hasArguments = true;
             Bundle bundle = arguments.getBundle(Constants.movie);
-            isFavoured = bundle.getBoolean(Constants.Fav);
-            fav = bundle.getBoolean(Constants.Fav);
-            id = bundle.getInt(Constants.ID);
-            film = (Movie) bundle.getSerializable(Constants.FILM);
-            if (id != 0 && !fav) {
-                presenter.getMovieDetails(FilmDetailFragment.class.getSimpleName(), id);
+            if (null != bundle) {
+                isFavoured = bundle.getBoolean(Constants.Fav);
+                fav = bundle.getBoolean(Constants.Fav);
+                id = bundle.getInt(Constants.ID);
+                film = (Movie) bundle.getSerializable(Constants.FILM);
+                if (id != 0 && !fav) {
+                    presenter.getMovieDetails(FilmDetailFragment.class.getSimpleName(), id);
+                }
             }
-
             if (fav && null != film) {
                 mFilm =
                         new MovieDetailsResponse(film.getId(), film.getTitle(), film.getOverview(), film.getReleaseDate(), film.getPosterPath(), film.getBackdropPath(), film.getVoteAverage());
@@ -171,7 +171,7 @@ public class FilmDetailFragment extends Fragment
                         isFavoured = false;
                         add_bookmark.setChecked(false);
                         getActivity().finish();
-
+                        add_bookmark.setChecked(isFavoured);
 
                     }
 
@@ -195,14 +195,16 @@ public class FilmDetailFragment extends Fragment
                         File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getPosterPath());
                         Poster = file.getPath();
                         movie.setPosterPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getPosterPath());
-                        try {
-                            file.createNewFile();
-                            FileOutputStream ostream = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
-                            ostream.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        Utility.isStoragePermissionGranted(getContext(),getActivity());
+                            try {
+                                file.createNewFile();
+                                FileOutputStream ostream = new FileOutputStream(file);
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
+                                ostream.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                         }
+
 
                     }
                 }).start();
@@ -229,7 +231,7 @@ public class FilmDetailFragment extends Fragment
                         File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
                         Log.i("file", file.getName());
                         movie.setBackdropPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
-
+                        Utility.isStoragePermissionGranted(getContext(),getActivity());
                         try {
                             file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
@@ -318,11 +320,6 @@ public class FilmDetailFragment extends Fragment
 
     @Override
     public void getMovieDetails(MovieDetailsResponse response) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        Objects.requireNonNull(activity.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
         CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout)
                 view.findViewById(R.id.collapsingToolbarLayout);
         toolbarLayout.setTitle(response.getName());
@@ -361,6 +358,5 @@ public class FilmDetailFragment extends Fragment
     public void onConnectionError() {
 
     }
-
 
 }

@@ -15,18 +15,6 @@
             android:exported="false"
             android:syncable="true" />
 
-        <!--<activity-->
-            <!--android:name=".ui.MoviesMainActivity"-->
-            <!--android:theme="@style/AppTheme">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-        <!--<activity-->
-            <!--android:name=".ui.MovieDetailActivity"-->
-            <!--android:theme="@style/AppTheme_NoActionBar" />-->
         <activity
             android:name=".ui.FilmListActivity"
             android:label="@string/title_film_list"

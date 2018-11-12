@@ -29,12 +29,12 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
 
     private ConnectionStatus connectionStatus = new ConnectionStatus();
     private int id;
+    private String TAG = "TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film_detail);
-
         connectionStatus.initConnectionStatus(this);
 
         setupPresenter();
@@ -68,7 +68,7 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
 
             FilmDetailFragment fragment = new FilmDetailFragment();
             fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.film_detail_container, fragment)
                     .commit();
         }
@@ -119,5 +119,7 @@ public class FilmDetailActivity extends BaseActivity<MovieDetailPresenter>
     public void onConnectionError() {
 
     }
+
+
 
 }

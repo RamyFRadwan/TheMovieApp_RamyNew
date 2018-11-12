@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/film_list"
+    android:id="@+id/moviesList"
     android:name="com.ramyfradwan.ramy.themovieapp_tmdb.ui.FilmListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     tools:context=".ui.FilmListActivity"
-    tools:listitem="@layout/film_list_content" />
+    tools:listitem="@layout/movie_card_item" />
