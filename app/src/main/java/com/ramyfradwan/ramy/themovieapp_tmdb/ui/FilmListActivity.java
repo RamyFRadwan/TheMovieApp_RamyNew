@@ -176,8 +176,8 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
         if (pageIndex > 1) {
 
             moviesAdapter.appendItems(movies);
-            movieRV.setAdapter(endlessRecyclerViewAdapter);
-
+            endlessRecyclerViewAdapter.onDataReady(true);
+            moviesAdapter.notifyDataSetChanged();
         } else {
             moviesAdapter =
                     new MoviesAdapter(this, this, movies, mTwoPane, fav);
@@ -203,7 +203,6 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
         if (pageIndex <= pageCount) {
             pageIndex++;
             presenter.loadMorePages(getClassName(), pageIndex, sortType);
-
         }
 
     }

@@ -57,7 +57,7 @@ public class FilmDetailFragment extends android.app.Fragment
     private boolean hasArguments;
     private MovieDetailsResponse movie;
     private boolean isFavoured;
-    public static String Poster;
+    private static String Poster;
     private boolean mTwoPane;
     private SharedPreferences sh;
     private boolean fav;
@@ -154,8 +154,7 @@ public class FilmDetailFragment extends android.app.Fragment
                         getActivity().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
 
                         isFavoured = true;
-                        add_bookmark.setText(R.string.on);
-                        add_bookmark.setChecked(isFavoured);
+                        add_bookmark.setChecked(true);
                     }
                     //When Movie is removed
                     else {
@@ -169,7 +168,8 @@ public class FilmDetailFragment extends android.app.Fragment
                         }
 
                         isFavoured = false;
-                        add_bookmark.setChecked(isFavoured);
+                        add_bookmark.setChecked(false);
+                        getActivity().finish();
 
 
                     }

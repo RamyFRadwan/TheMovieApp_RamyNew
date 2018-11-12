@@ -58,6 +58,7 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
+                android:onClick="onChecked"
                 android:background="@drawable/fav_click_selector"
                 android:textOff=""
                 android:textOn="" />
