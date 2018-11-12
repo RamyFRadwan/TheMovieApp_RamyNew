@@ -67,6 +67,7 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
     private EndlessRecyclerViewAdapter endlessRecyclerViewAdapter;
     private int pageCount = 0;
     private ConnectionStatus connectionStatus = new ConnectionStatus();
+    private static final String TAG_FRAGMENT = "MOVIE_FRAGMENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,12 @@ public class FilmListActivity extends BaseActivity<MoviesPresenter>
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.film_detail_container, new FilmDetailFragment(), TAG_FRAGMENT)
+                        .commit();
+
+            }
         }
 
 

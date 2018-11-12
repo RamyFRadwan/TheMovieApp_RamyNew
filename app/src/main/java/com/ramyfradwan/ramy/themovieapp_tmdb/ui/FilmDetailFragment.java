@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +48,7 @@ import java.util.Objects;
  * in two-pane mode (on tablets) or a {@link FilmDetailActivity}
  * on handsets.
  */
-public class FilmDetailFragment extends android.app.Fragment
+public class FilmDetailFragment extends Fragment
         implements MovieDetailPresenterLisener {
     /**
      * The fragment argument representing the item ID that this fragment

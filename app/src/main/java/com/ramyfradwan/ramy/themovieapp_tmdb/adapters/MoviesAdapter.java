@@ -1,6 +1,5 @@
 package com.ramyfradwan.ramy.themovieapp_tmdb.adapters;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,14 +37,14 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
-    private Activity activity;
+    private AppCompatActivity activity;
     private Context context;
     private List<Movie> movies = new ArrayList<>();
     private boolean fav, mTwoPane;
     private  String Poster;
 
 
-    public MoviesAdapter(@NonNull Activity activity, @NonNull Context context, @NonNull List<Movie> movies, boolean mTwoPane, boolean fav) {
+    public MoviesAdapter(@NonNull AppCompatActivity activity, @NonNull Context context, @NonNull List<Movie> movies, boolean mTwoPane, boolean fav) {
         this.context = context;
         this.movies = movies;
         this.fav = fav;
@@ -136,7 +136,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     bundle.putBundle(Constants.movie,arguments);
                     FilmDetailFragment fragment = new FilmDetailFragment();
                     fragment.setArguments(arguments);
-                    activity.getFragmentManager().beginTransaction()
+                    activity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.film_detail_container, fragment)
                             .commit();
                 } else {
