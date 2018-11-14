@@ -72,12 +72,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         if (!fav) {
             holder.movieName.setText(movies.get(position).getOriginalTitle());
             try {
-
-
-                Picasso.get()
-                        .load(Constants.basePosterPath + movies.get(position).getPosterPath())
-                        .into(holder.poster);
-
                 Picasso.get()
                         .load(Constants.basePosterPath + movies.get(position).getPosterPath())
                         .into(holder.poster,
@@ -99,9 +93,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             holder.movieName.setText(movies.get(position).getTitle());
             try {
 
-
+                String poster = Environment.getExternalStorageDirectory().getPath()+movies.get(position).getPosterPath();
                 Picasso.get()
-                        .load(new File(movies.get(position).getPosterPath()))
+                        .load(new File(poster))
                         .into(holder.poster,
                                 PicassoPalette
                                         .with((movies.get(position).getPosterPath()),
@@ -132,6 +126,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     Bundle arguments = new Bundle();
                     arguments.putInt(Constants.ID, movies.get(position).getId());
                     arguments.putSerializable(Constants.FILM, movies.get(position));
+                    arguments.putBoolean(Constants.Fav,fav);
+                    arguments.putBoolean(Constants.MTWOPANE,mTwoPane);
                     Bundle bundle = new Bundle();
                     bundle.putBundle(Constants.movie,arguments);
                     FilmDetailFragment fragment = new FilmDetailFragment();
@@ -243,8 +239,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             }
 
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                if (placeHolderDrawable != null) {
-                }
             }
         };
         Target target2 = new Target() {

@@ -39,6 +39,7 @@ import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A fragment representing a single Film detail screen.
@@ -53,14 +54,10 @@ public class FilmDetailFragment extends Fragment
      * represents.
      */
 
-    private static final String ARG_ITEM_ID = "item_id";
-    private boolean hasArguments;
     private MovieDetailsResponse movie;
     private boolean isFavoured;
-    private static String Poster;
     private boolean mTwoPane;
     private SharedPreferences sh;
-    private boolean fav;
     private TextView rating;
     private TextView releaseDate;
     private TextView overview;
@@ -70,7 +67,6 @@ public class FilmDetailFragment extends Fragment
     private MovieDetailPresenter presenter;
     private Movie film;
     private MovieDetailsResponse mFilm;
-    private String TAG = "TAG";
     /**
      * The dummy content this fragment is presenting.
      */
@@ -99,36 +95,35 @@ public class FilmDetailFragment extends Fragment
 
         int id;
         if (arguments != null) {
-            hasArguments = true;
             Bundle bundle = arguments.getBundle(Constants.movie);
             if (null != bundle) {
                 isFavoured = bundle.getBoolean(Constants.Fav);
-                fav = bundle.getBoolean(Constants.Fav);
                 id = bundle.getInt(Constants.ID);
                 film = (Movie) bundle.getSerializable(Constants.FILM);
-                if (id != 0 && !fav) {
+                mTwoPane = bundle.getBoolean(Constants.MTWOPANE);
+                if (id != 0 && !isFavoured) {
                     presenter.getMovieDetails(FilmDetailFragment.class.getSimpleName(), id);
                 }
             }
-            if (fav && null != film) {
+            if (isFavoured && null != film) {
                 mFilm =
                         new MovieDetailsResponse(film.getId(), film.getTitle(), film.getOverview(), film.getReleaseDate(), film.getPosterPath(), film.getBackdropPath(), film.getVoteAverage());
                 setMovieData(mFilm);
             }
-            if (arguments.getBoolean("twoPane")) {
-                mTwoPane = true;
-            } else {
-                if (fav) {
-                    Picasso
-                            .get()
-                            .load(new File(mFilm.getBackdropPath()))
-                            .into(background);
-                    Picasso
-                            .get()
-                            .load(new File(mFilm.getPosterPath()))
-                            .into(poster);
-                }
+
             }
+//            else {
+//                if (isFavoured) {
+//                    Picasso
+//                            .get()
+//                            .load(new File(mFilm.getBackdropPath()))
+//                            .into(background);
+//                    Picasso
+//                            .get()
+//                            .load(new File(mFilm.getPosterPath()))
+//                            .into(poster);
+//                }
+//            }
 
             assert movie != null;
 
@@ -152,7 +147,7 @@ public class FilmDetailFragment extends Fragment
                         values.put(MovieContract.MovieEntry.COLUMN_DATE, movie.getRelease_date());
                         values.put(MovieContract.MovieEntry.COLUMN_IMAGE, movie.getPosterPath());
 
-                        getActivity().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
+                        Objects.requireNonNull(getActivity()).getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
 
                         isFavoured = true;
                         add_bookmark.setChecked(true);
@@ -160,24 +155,25 @@ public class FilmDetailFragment extends Fragment
                     //When Movie is removed
                     else {
                         String[] args = {mFilm.getName()};
-                            int row = getActivity().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, "title=?", args);
-                            if (row > 0) {
-                                Toast.makeText(getActivity(), "Movie delete Success", Toast.LENGTH_SHORT).show();
-                                toggleButton.setVisibility(View.INVISIBLE);
-                                getActivity().finish();
-                            }
+                        int row = Objects.requireNonNull(getActivity()).getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, "title=?", args);
+                        if (row > 0) {
+                            Toast.makeText(getActivity(), "Movie delete Success", Toast.LENGTH_SHORT).show();
+                            toggleButton.setVisibility(View.INVISIBLE);
+                            getActivity().finish();
                         }
 
                         isFavoured = false;
                         add_bookmark.setChecked(false);
-                        getActivity().finish();
-                        add_bookmark.setChecked(isFavoured);
+                        if (!mTwoPane)
+                            getActivity().finish();
 
                     }
+                    add_bookmark.setChecked(isFavoured);
+                }
 
             });
 
-        }
+
 
         return view;
     }
@@ -193,16 +189,15 @@ public class FilmDetailFragment extends Fragment
                     public void run() {
 
                         File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getPosterPath());
-                        Poster = file.getPath();
                         movie.setPosterPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getPosterPath());
-                        Utility.isStoragePermissionGranted(getContext(),getActivity());
-                            try {
-                                file.createNewFile();
-                                FileOutputStream ostream = new FileOutputStream(file);
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
-                                ostream.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        Utility.isStoragePermissionGranted(getContext(), getActivity());
+                        try {
+                            file.createNewFile();
+                            FileOutputStream ostream = new FileOutputStream(file);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
+                            ostream.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
 
@@ -231,7 +226,7 @@ public class FilmDetailFragment extends Fragment
                         File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
                         Log.i("file", file.getName());
                         movie.setBackdropPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
-                        Utility.isStoragePermissionGranted(getContext(),getActivity());
+                        Utility.isStoragePermissionGranted(getContext(), getActivity());
                         try {
                             file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
@@ -280,40 +275,48 @@ public class FilmDetailFragment extends Fragment
 
 
     private void setMovieData(MovieDetailsResponse movie) {
-        rating.setText(
-                new StringBuilder()
-                        .append(String.valueOf(movie.getVote_average()))
-                        .append(getString(R.string.separator))
-                        .append(movie.getVote_count())
-                        .toString());
+        if (isAdded() && null != getActivity()) {
+            rating.setText(
+                    new StringBuilder()
+                            .append(String.valueOf(movie.getVote_average()))
+                            .append(getString(R.string.separator))
+                            .append(movie.getVote_count())
+                            .toString());
 
-        overview.setText(movie.getOverview());
+            overview.setText(movie.getOverview());
 
-        releaseDate.setText(movie.getRelease_date());
-        Log.e("background", movie.getBackdropPath());
-        if(!fav) {
-            try {
+            releaseDate.setText(movie.getRelease_date());
+            Log.e("background", movie.getBackdropPath());
+            if (!isFavoured) {
+                try {
 
-                Picasso.get()
-                        .load(Constants.basePosterPath + movie.getPosterPath())
-                        .into(poster);
-                Picasso.get()
-                        .load(Constants.basePosterPath + movie.getBackdropPath())
-                        .into(background);
-            } catch (Exception e) {
-                Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
-            }
-        }else {
-            try {
+                    Picasso.get()
+                            .load(Constants.basePosterPath + movie.getPosterPath())
+                            .into(poster);
+                    Picasso.get()
+                            .load(Constants.basePosterPath + movie.getBackdropPath())
+                            .into(background);
+                } catch (Exception e) {
+                    Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
+                }
+            } else {
+                try {
 
-                Picasso.get()
-                        .load( movie.getPosterPath())
-                        .into(poster);
-                Picasso.get()
-                        .load(movie.getBackdropPath())
-                        .into(background);
-            } catch (Exception e) {
-                Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
+                    String posterr = Environment.getExternalStorageDirectory().getPath()+movie.getPosterPath();
+
+                    Picasso.get()
+                            .load(new File(posterr))
+                            .into(poster);
+
+
+                    posterr = Environment.getExternalStorageDirectory().getPath()+movie.getBackdropPath();
+
+                    Picasso.get()
+                            .load(new File(posterr))
+                            .into(background);
+                } catch (Exception e) {
+                    Log.e(getResources().getString(R.string.picasso_exception), e.getMessage());
+                }
             }
         }
     }

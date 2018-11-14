@@ -115,7 +115,7 @@ public class ConnectionStatus {
         changeTextStatus(activity, status);
     }
 
-    public void changeTextStatus(Context context, int status) {
+    private void changeTextStatus(Context context, int status) {
         if (tvConnectionStatus == null ||
                 llStatusBack == null ||
                 pbLoading == null)
@@ -157,30 +157,4 @@ public class ConnectionStatus {
         }
         this.status = status;
     }
-
-    /*public static String getConnectivityStatusString(Context context) {
-        int conn = ConnectionStatus.getConnectivityStatus(context);
-        String status = null;
-        if (conn != ConnectionStatus.TYPE_WIFI && conn != ConnectionStatus.TYPE_MOBILE) {
-            status = "No Internet Connection";
-        } else if (conn == ConnectionStatus.TYPE_NOT_CONNECTED) {
-            status = "Waiting For Network";
-        } else
-            status = "Connected";
-
-        return status;
-    }
-
-    *//*public static int getConnectivityStatusInt(Context context) {
-        int conn = ConnectionStatus.getConnectivityStatus(context);
-        int status = 0;
-        if (conn != ConnectionStatus.TYPE_WIFI && conn != ConnectionStatus.TYPE_MOBILE) {
-            status = MainActivity.NO_INTERNET_CONNECTION;
-        } else if (conn == ConnectionStatus.TYPE_NOT_CONNECTED) {
-            status = MainActivity.WAITING_FOR_NETWORK;
-        } else
-            status = MainActivity.CONNECTED;
-
-        return status;
-    }*/
 }

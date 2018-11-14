@@ -26,8 +26,9 @@ public class MoviesPresenter extends BasePresenter<MoviesController, MoviesPrese
         try {
             if (Constants.CONNECTED == connectionStatus.getStatus()) {
                 controller.getPopularMovies(className, pageIndex);
-                connectionStatus.tvConnectionStatus.setText(R.string.connected);
-            } else
+                if( null != connectionStatus.tvConnectionStatus)
+                    connectionStatus.tvConnectionStatus.setText(R.string.connected);
+            } else if(null != connectionStatus.tvConnectionStatus)
                 connectionStatus.tvConnectionStatus.setText(R.string.no_internet);
         } catch (Exception e) {
             e.printStackTrace();

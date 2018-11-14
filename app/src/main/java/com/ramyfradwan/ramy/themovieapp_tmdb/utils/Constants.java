@@ -17,4 +17,5 @@ public class Constants {
     public static String Fav =  "FAV";
     public static String movie = "MOVIE";
     public static String FILM = "FILM";
+    public static String MTWOPANE = "mTwoPane";
 }
