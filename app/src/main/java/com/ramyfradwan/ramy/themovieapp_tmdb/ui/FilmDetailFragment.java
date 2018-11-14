@@ -112,18 +112,6 @@ public class FilmDetailFragment extends Fragment
             }
 
             }
-//            else {
-//                if (isFavoured) {
-//                    Picasso
-//                            .get()
-//                            .load(new File(mFilm.getBackdropPath()))
-//                            .into(background);
-//                    Picasso
-//                            .get()
-//                            .load(new File(mFilm.getPosterPath()))
-//                            .into(poster);
-//                }
-//            }
 
             assert movie != null;
 
@@ -303,11 +291,16 @@ public class FilmDetailFragment extends Fragment
                 try {
 
                     String posterr = Environment.getExternalStorageDirectory().getPath()+movie.getPosterPath();
+                    if (movie.getPosterPath().contains(getActivity().getString(R.string.storage))) {
+                        Picasso.get()
+                                .load(new File(movie.getPosterPath()))
+                                .into(poster);
+                    } else {
+                        Picasso.get()
+                                .load(new File(posterr))
+                                .into(poster);
 
-                    Picasso.get()
-                            .load(new File(posterr))
-                            .into(poster);
-
+                    }
 
                     posterr = Environment.getExternalStorageDirectory().getPath()+movie.getBackdropPath();
 

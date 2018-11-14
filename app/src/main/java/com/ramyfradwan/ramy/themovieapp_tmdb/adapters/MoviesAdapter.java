@@ -93,19 +93,35 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             holder.movieName.setText(movies.get(position).getTitle());
             try {
 
+                if (movies.get(position).getPosterPath().contains(activity.getString(R.string.storage)))
+                {
+                    Picasso.get()
+                            .load(new File(movies.get(position).getPosterPath()))
+                            .into(holder.poster,
+                                    PicassoPalette
+                                            .with((movies.get(position).getPosterPath()),
+                                                    holder.poster)
+                                            .use(PicassoPalette.Profile.VIBRANT)
+                                            .intoBackground(holder.full_layout,
+                                                    PicassoPalette.Swatch.RGB)
+                                            .intoTextColor(holder.movieName,
+                                                    PicassoPalette.Swatch.TITLE_TEXT_COLOR));
+                }
+                else {
                 String poster = Environment.getExternalStorageDirectory().getPath()+movies.get(position).getPosterPath();
-                Picasso.get()
-                        .load(new File(poster))
-                        .into(holder.poster,
-                                PicassoPalette
-                                        .with((movies.get(position).getPosterPath()),
-                                                holder.poster)
-                                        .use(PicassoPalette.Profile.VIBRANT)
-                                        .intoBackground(holder.full_layout,
-                                                PicassoPalette.Swatch.RGB)
-                                        .intoTextColor(holder.movieName,
-                                                PicassoPalette.Swatch.TITLE_TEXT_COLOR));
 
+                    Picasso.get()
+                            .load(new File(poster))
+                            .into(holder.poster,
+                                    PicassoPalette
+                                            .with(poster,
+                                                    holder.poster)
+                                            .use(PicassoPalette.Profile.VIBRANT)
+                                            .intoBackground(holder.full_layout,
+                                                    PicassoPalette.Swatch.RGB)
+                                            .intoTextColor(holder.movieName,
+                                                    PicassoPalette.Swatch.TITLE_TEXT_COLOR));
+                }
 
             } catch (Exception e) {
                 Log.e(context.getString(R.string.picasso_exception), e.getMessage());
@@ -217,9 +233,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     @Override
                     public void run() {
 
-                        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getPosterPath());
+                        File file = new File(Environment.getExternalStorageDirectory().getPath() + movie.getPosterPath());
                         Poster = file.getPath();
-                        movie.setPosterPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getPosterPath());
+                        movie.setPosterPath(Poster);
                         try {
                             file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
@@ -249,9 +265,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     @Override
                     public void run() {
 
-                        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
+                        File file = new File(Environment.getExternalStorageDirectory().getPath() + movie.getBackdropPath());
                         Log.i("file", file.getName());
-                        movie.setBackdropPath(Environment.getExternalStorageDirectory().getPath() + "/" + movie.getBackdropPath());
+                        movie.setBackdropPath(file.getPath());
 
                         try {
                             file.createNewFile();
